@@ -1,0 +1,36 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "DDA"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Empty Ability"
+    },
+    {
+      "name": "mainability_HelloWorld",
+      "value": "Hello World"
+    },
+    {
+      "name": "agentserviceability_description",
+      "value": "DDA serive"
+    },
+    {
+      "name": "start",
+      "value": "开启DDA"
+    },
+    {
+      "name": "stop",
+      "value": "关闭DDA"
+    },
+    {
+      "name": "start_over",
+      "value": "已开启"
+    },
+    {
+      "name": "stop_over",
+      "value": "已关闭"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "app": {
+    "bundleName": "com.hit.dda",
+    "vendor": "hit",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    }
+  },
+  "deviceConfig": {},
+  "module": {
+    "package": "com.hit.dda",
+    "name": ".MyApplication",
+    "mainAbility": "com.hit.dda.MainAbility",
+    "deviceType": [
+      "phone"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "entry",
+      "moduleType": "entry",
+      "installationFree": false
+    },
+    "abilities": [
+      {
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ],
+        "orientation": "unspecified",
+        "visible": true,
+        "name": "com.hit.dda.MainAbility",
+        "icon": "$media:icon",
+        "description": "$string:mainability_description",
+        "label": "$string:entry_MainAbility",
+        "type": "page",
+        "launchType": "standard"
+      },
+      {
+        "name": "com.hit.dda.AgentServiceAbility",
+        "icon": "$media:icon",
+        "description": "$string:agentserviceability_description",
+        "type": "service",
+        "visible": true,
+        "backgroundModes": [
+          "dataTransfer",
+          "location",
+          "wifiInteraction"
+        ]
+      }
+    ],
+    "reqPermissions": [
+      {
+        "name": "ohos.permission.GET_DISTRIBUTED_DEVICE_INFO"
+      },
+      {
+        "name": "ohos.permission.KEEP_BACKGROUND_RUNNING"
+      },
+      {
+        "name": "ohos.permission.DISTRIBUTED_DATASYNC"
+      },
+      {
+        "name": "ohos.permission.SPREAD_STATUS_BAR"
+      },
+      {
+        "name": "ohos.permission.GET_NETWORK_INFO"
+      },
+      {
+        "name": "ohos.permission.USE_TRUSTCIRCLE_MANAGER"
+      },
+      {
+        "name": "ohos.permission.CLEAN_BACKGROUND_PROCESSES"
+      },
+      {
+        "name": "ohos.permission.GET_BUNDLE_INFO"
+      },
+      {
+        "name": "ohos.permission.SET_NETWORK_INFO"
+      },
+      {
+        "name": "ohos.permission.INTERNET"
+      },
+      {
+        "name": "ohos.permission.GET_WIFI_INFO"
+      },
+      {
+        "name": "ohos.permission.MANAGE_WIFI_CONNECTION"
+      },
+      {
+        "name": "ohos.permission.SET_WIFI_INFO"
+      }
+    ]
+  }
+}
