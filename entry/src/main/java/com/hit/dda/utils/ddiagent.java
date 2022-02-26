@@ -2,6 +2,8 @@ package com.hit.dda.utils;
 
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
+
 import DDI.DDIS;
 import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
@@ -19,10 +21,8 @@ public class ddiagent {
      */
     static boolean connectTest(Socket socket, long timeout){
         HashMap<String,String> result=DDIS.DDConnectTest(socket,timeout);
-        if(result.get("msg").isEmpty()||result.get("code").equals("0"))//结果正确
-            return true;
-        else
-            return false;
+        //结果正确
+        return result.get("msg").isEmpty() || result.get("code").equals("0");
     }
 
     /**
@@ -31,9 +31,8 @@ public class ddiagent {
      */
     static String GetDeviceInfoToString(Context context){
         //TODO
-        HashMap<String,String> a=DDIS.GetDeviceInfo(context);
-        HiLog.info(LABEL_LOG,"GetDeviceInfoToString： "+a.toString());
-        return a.toString();
+        HiLog.info(LABEL_LOG,"GetDeviceInfoToString： "+DDIS.GetDeviceInfo(context).toString());
+        return DDIS.GetDeviceInfo(context).toString();
     }
 
     /**
@@ -51,7 +50,7 @@ public class ddiagent {
             switch (Commendtype) {
                 case "DDGetTime":
                     return DDIS.DDGetTime();
-                case "GetDeviceInfo":
+                case "GetDeviceInfo*":
                     return GetDeviceInfoToString(context);
                 /*
                     ...
