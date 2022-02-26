@@ -91,7 +91,11 @@ public class DDASocket {
 
         }
     }
-
+    /**
+     * 获取监听端口号
+     * @return PORT  监听端口号
+     * 默认端口号为7000
+     */
     public int getPort() {
         return PORT;
     }
@@ -147,7 +151,6 @@ public class DDASocket {
                     }
                 }
                 socket.close();
-                HiLog.info(LABEL_LOG, "socket关闭");
                 HiLog.info(LABEL_LOG, "socket 客户端 %{public}s 已断开连接",socket.getRemoteSocketAddress());
             } catch (InterruptedException e) {
                 e.printStackTrace();
