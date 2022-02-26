@@ -53,7 +53,7 @@ public class ThreadPoolUtil {
 
     /**
      * ThreadFactory
-     *
+     *线程工厂方法
      */
     static class CommonThreadFactory implements ThreadFactory {
         @Override

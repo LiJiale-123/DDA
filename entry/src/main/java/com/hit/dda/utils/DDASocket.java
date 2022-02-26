@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DDASocket {
     private static final String TAG = DDASocket.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
+
     //默认接收socket消息队列的大小
     private static final int QUEUE_MAX = 50;
     //socket超时时间
@@ -23,30 +24,9 @@ public class DDASocket {
     private ServerSocket serverSocket;
     //每个连接的socket，和该socket发送的命令
     private Map<Socket, BlockingQueue<String>> map = new ConcurrentHashMap<>();
+
     private volatile int PORT = -1;
     private Context context;
-    //private volatile Transfer transfer;
-
-    public DDASocket() {
-        try {
-            this.serverSocket = new ServerSocket(0);
-            this.PORT = serverSocket.getLocalPort();
-            HiLog.info(LABEL_LOG,"监听socket建立，port: %{public}d",PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public DDASocket(int port) {
-        try {
-            if(serverSocket ==null){
-                this.serverSocket = new ServerSocket(port);
-                this.PORT=port;
-            }
-            HiLog.info(LABEL_LOG,"监听socket建立,port: %{public}d",PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public DDASocket(int port, Context context) {
         try {
@@ -79,6 +59,9 @@ public class DDASocket {
         HiLog.info(LABEL_LOG, "DDAsocket已中断");
     }
 
+    /**
+     * 停止socket通信
+     */
     public void stopSocket(){
         if(!serverSocket.isClosed()){
             try {
@@ -127,9 +110,8 @@ public class DDASocket {
                 BlockingQueue<String> queue = new ArrayBlockingQueue<>(QUEUE_MAX);
                 map.put(socket,queue);
                 HiLog.info(LABEL_LOG, "%{public}s", "客户端:" + socket.getRemoteSocketAddress() +"已连接到服务器,开始握手");
-                boolean suc=ddiagent.connectTest(socket,TIME_OUT);
-                //DDIS.DDConnectTest(socket,TIME_OUT);
-                if(suc)
+
+                if(ddiagent.connectTest(socket,TIME_OUT))
                     HiLog.info(LABEL_LOG, "握手成功");
                 else
                     HiLog.info(LABEL_LOG, "握手失败");

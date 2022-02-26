@@ -2,19 +2,14 @@ package com.hit.dda.utils;
 
 import java.net.Socket;
 import java.util.HashMap;
-
 import DDI.DDIS;
-import ohos.aafwk.ability.Ability;
 import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 
-import static java.security.AccessController.getContext;
-
 public class ddiagent {
     private static final String TAG = ddiagent.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
-
 
     /**
      * 测试分布式调试所需的设备连接
@@ -36,9 +31,7 @@ public class ddiagent {
      */
     static String GetDeviceInfoToString(Context context){
         //TODO
-        //HiLog.info(LABEL_LOG,"看看能不能执行到这一行1");
         HashMap<String,String> a=DDIS.GetDeviceInfo(context);
-        //HiLog.info(LABEL_LOG,"看看能不能执行到这一行2");
         HiLog.info(LABEL_LOG,"GetDeviceInfoToString： "+a.toString());
         return a.toString();
     }

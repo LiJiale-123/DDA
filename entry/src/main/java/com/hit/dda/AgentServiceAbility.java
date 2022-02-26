@@ -25,6 +25,9 @@ import ohos.rpc.IRemoteObject;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.rpc.RemoteException;
+
+import java.io.IOException;
+
 import static com.hit.dda.slice.MainAbilitySlice.EVENT_Action;
 
 public class AgentServiceAbility extends Ability {
@@ -91,13 +94,16 @@ public class AgentServiceAbility extends Ability {
     /**
      * 重写父类的onStop
      * ServiceAbility停止时调用的方法
-     * 取消通知，发送服务状态改变事件；
+     * 停止socket监听取消通知，发送服务状态改变事件；
      */
     @Override
     public void onStop()
     {
         super.onStop();
         HiLog.info(LABEL_LOG, "AgentServiceAbility::onStop");
+        if(ddaSocket!=null){
+            ddaSocket.stopSocket();
+        }
         cancelNotification();
         sendEvent();
     }
