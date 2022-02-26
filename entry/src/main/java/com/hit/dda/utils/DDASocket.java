@@ -18,7 +18,7 @@ public class DDASocket {
     //默认接收socket消息队列的大小
     private static final int QUEUE_MAX = 50;
     //socket超时时间
-    private static final int TIME_OUT = 5000;
+    private static final int TIME_OUT = 20000;
     //监听Socket
     private ServerSocket serverSocket;
     //每个连接的socket，和该socket发送的命令

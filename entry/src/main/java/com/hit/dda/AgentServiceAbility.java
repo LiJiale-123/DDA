@@ -1,5 +1,15 @@
 package com.hit.dda;
 
+/**
+ * @ClassName : Test
+ * @Description :
+ * AgentServiceAbility，DDA应用安装打开后自动开启的服务
+ *  1、负责持续监听socket,与DDJ进行通信
+ *  2、发送通知显示服务正在运行，显示正在监听的端口号
+ * @Author : dda
+ * @Date : Created in 2022/2/26 13:09
+ * @Version: : 1.0
+ */
 import com.hit.dda.utils.DDASocket;
 import ohos.aafwk.ability.Ability;
 import ohos.aafwk.ability.LocalRemoteObject;
@@ -15,19 +25,7 @@ import ohos.rpc.IRemoteObject;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.rpc.RemoteException;
-
-import static com.hit.dda.slice.MainAbilitySlice.HANDLE_NAME;
-
-/**
- * @ClassName : Test
- * @Description :
- * AgentServiceAbility，DDA应用安装打开后自动开启的服务
- *  1、负责持续监听socket,与DDJ进行通信
- *  2、发送通知显示服务正在运行，显示正在监听的端口号
- * @Author : dda
- * @Date : Created in 2022/2/26 13:09
- * @Version: : 1.0
- */
+import static com.hit.dda.slice.MainAbilitySlice.EVENT_Action;
 
 public class AgentServiceAbility extends Ability {
     /**
@@ -62,6 +60,7 @@ public class AgentServiceAbility extends Ability {
         new Thread(() -> {
             state = PLAY_STATE;
             ddaSocket = new DDASocket(SOCKET_PORT,this);
+            HiLog.info(LABEL_LOG, "AgentServiceAbility::ddaSocket建立");
             ddaSocket.startSocket();
         }).start();
         sendNotification(Integer.toString(SOCKET_PORT));
@@ -132,7 +131,7 @@ public class AgentServiceAbility extends Ability {
         try {
             Intent intent = new Intent();
             Operation operation = new Intent.OperationBuilder()
-                    .withAction(HANDLE_NAME)
+                    .withAction(EVENT_Action)
                     .build();
             intent.setOperation(operation);
             HiLog.info(LABEL_LOG, "sendEvent:"+state);

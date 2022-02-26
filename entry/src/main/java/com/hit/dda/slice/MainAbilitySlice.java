@@ -26,9 +26,9 @@ import static com.hit.dda.AgentServiceAbility.STOP_STATE;
 public class MainAbilitySlice extends AbilitySlice {
 
     /**
-     * AgentServiceAbility包名HANDLE_NAME
+     * 事件应用包名
      */
-    public static final String HANDLE_NAME = "com.hit.dda";
+    public static final String EVENT_Action = "com.hit.dda";
     /**
      * serviceAbility全名
      */
@@ -87,7 +87,7 @@ public class MainAbilitySlice extends AbilitySlice {
 
     private void initSubscribeEvent() {
         MatchingSkills matchingSkills = new MatchingSkills();
-        matchingSkills.addEvent(HANDLE_NAME);
+        matchingSkills.addEvent(EVENT_Action);
         CommonEventSubscribeInfo subscribeInfo = new CommonEventSubscribeInfo(matchingSkills);
         subscriber = new MyCommonEventSubscriber(subscribeInfo);
         try {
@@ -103,7 +103,7 @@ public class MainAbilitySlice extends AbilitySlice {
         Intent intent = new Intent();
         Operation operation = new Intent.OperationBuilder()
                 .withDeviceId("")
-                .withBundleName(HANDLE_NAME)
+                .withBundleName(EVENT_Action)
                 .withAbilityName(SERVICE_ABILITY)
                 .build();
         intent.setOperation(operation);
