@@ -4,10 +4,10 @@ apply plugin: 'com.huawei.ohos.decctest'
 ohos {
     signingConfigs {
         debug {
-            storeFile file('D:\\key\\dda.p12')
-            storePassword '000000197022A46C2A6873504212AF1ABFE2C28F437003B583B4BE5BCEBE2E519AB4DD30E2AF83CDCB'
+            storeFile file('D:\\test\\DDA\\key\\dda.p12')
+            storePassword '00000019191F98FC5CC18881B601636B9C7B02B86460D1E1ADEA2092462052CD013B8FD123E653658A'
             keyAlias = 'dda'
-            keyPassword '000000196DD94BC40D816D0DFBDCAFAB513E09AC233D7B146D0680A8D136EC98926C74E20772E2F5FB'
+            keyPassword '00000019A8D668ED058DF83B1FFB9E1F83B46EE475E3BE800F1107743D4DE27AAC38E3172C2B230423'
             signAlg = 'SHA256withECDSA'
             profile file('D:\\key\\ddaDebug.p7b')
             certpath file('D:\\key\\dda.cer')
