@@ -16,11 +16,12 @@ import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 import ohos.rpc.RemoteException;
 
+import static com.hit.dda.slice.MainAbilitySlice.HANDLE_NAME;
+
 public class AgentServiceAbility extends Ability {
     //按钮状态，PLAY_STATE表示AgentService已启动；STOP_STATE表示AgentService已关闭
     public static final int PLAY_STATE = 0;
     public static final int STOP_STATE = 1;
-    private static final String HANDLE_NAME = "com.hit.dda";
 
     private static final String TAG = AgentServiceAbility.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
@@ -172,7 +173,7 @@ public class AgentServiceAbility extends Ability {
         if (state == STOP_STATE) {
             return;
         }
-        HiLog.info(LABEL_LOG, "开启stopAgent");
+        HiLog.info(LABEL_LOG, "停止stopAgent");
 //        ddaSocket.stopSocket();
 //        ddaSocket = null;
         state = STOP_STATE;

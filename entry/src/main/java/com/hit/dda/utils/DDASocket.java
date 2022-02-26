@@ -15,11 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DDASocket {
     private static final String TAG = DDASocket.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
+    //默认接收socket消息队列的大小
     private static final int QUEUE_MAX = 50;
-    //private static final String END = "55AA";
-    //private static final String CONNECT = "create socket ";
+    //socket超时时间
     private static final int TIME_OUT = 5000;
+    //监听Socket
     private ServerSocket serverSocket;
+    //每个连接的socket，和该socket发送的命令
     private Map<Socket, BlockingQueue<String>> map = new ConcurrentHashMap<>();
     private volatile int PORT = -1;
     private Context context;
@@ -59,11 +61,12 @@ public class DDASocket {
         }
     }
 
+    /**
+     * 开始socket通信
+     */
     public void startSocket(){
-        HiLog.info(LABEL_LOG, "DDASocket::startSocket");
-        HiLog.info(LABEL_LOG, "DDASocket保持监听");
+        HiLog.info(LABEL_LOG, "DDASocket::startSocket DDASocket保持监听");
         while(!Thread.interrupted()){
-            HiLog.info(LABEL_LOG, "serverSocket.isClosed(): %{public}s",serverSocket.isClosed());
             Socket socket;
             try {
                 socket = serverSocket.accept();
@@ -73,7 +76,7 @@ public class DDASocket {
                 e.printStackTrace();
             }
         }
-        HiLog.info(LABEL_LOG, "serverSocket已断开连接");
+        HiLog.info(LABEL_LOG, "DDAsocket已中断");
     }
 
     public void stopSocket(){
@@ -93,10 +96,19 @@ public class DDASocket {
         return PORT;
     }
 
+    /**
+     * 获取每个连接的socket，和该socket发送的命令
+     * @return String 返回每个连接的socket，和该socket发送的命令map的string格式
+     */
     public String getMap (){
         return map.toString();
     }
 
+    /**
+     * 处理socket的线程类,处理结束关闭socket，取消该与该socket有关的通知
+     * 接收socket发送的数据，返回接收成功的回复消息
+     * 将该socket和与该socket有关的命令保存到map中
+     */
     class handleSocket implements Runnable {
 
         private final Socket socket;
@@ -113,7 +125,7 @@ public class DDASocket {
                 HiLog.info(LABEL_LOG, "%{public}s", "客户端:" + socket.getRemoteSocketAddress() +"已连接到服务器,开始握手");
                 boolean suc=ddiagent.connectTest(socket,TIME_OUT);
                 //DDIS.DDConnectTest(socket,TIME_OUT);
-                if(suc==true)
+                if(suc)
                     HiLog.info(LABEL_LOG, "握手成功");
                 else
                     HiLog.info(LABEL_LOG, "握手失败");
