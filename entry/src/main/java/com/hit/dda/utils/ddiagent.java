@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import DDI.DDIS;
+import com.hit.dda.service.MySystemInfoMangerment;
 import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
@@ -52,6 +53,8 @@ public class ddiagent {
                     return DDIS.DDGetTime();
                 case "GetDeviceInfo*":
                     return GetDeviceInfoToString(context);
+                case "Get":
+                    return String.valueOf(new MySystemInfoMangerment(context,"com.hit.hello").getPidByName());
                 /*
                     ...
                     新的命令类型和处理方法，在此处补充
