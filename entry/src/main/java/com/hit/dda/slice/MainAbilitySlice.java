@@ -25,16 +25,20 @@ import static com.hit.dda.AgentServiceAbility.STOP_STATE;
 
 public class MainAbilitySlice extends AbilitySlice {
 
+    /**
+     * AgentServiceAbility包名HANDLE_NAME
+     */
+    public static final String HANDLE_NAME = "com.hit.dda";
+    /**
+     * serviceAbility全名
+     */
+    private static final String SERVICE_ABILITY = "com.hit.dda.AgentServiceAbility";
+
     private static final String TAG = MainAbilitySlice.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
 
     private AgentServiceAbility.DDARemoteObject ddaRemoteObject;
     private MyCommonEventSubscriber subscriber;
-
-    //DDA包名HANDLE_NAME
-    public static final String HANDLE_NAME = "com.hit.dda";
-    //serviceAbility全名
-    private static final String SERVICE_ABILITY = "com.hit.dda.AgentServiceAbility";
 
     private Button startAgent;
     private Button getInfo;

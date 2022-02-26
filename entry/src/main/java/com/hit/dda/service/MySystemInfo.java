@@ -18,6 +18,13 @@ import ohos.rpc.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @className : MySystemInfo
+ * @description :
+ * @author :
+ * @date : Created in 2022/2/26 13:09
+ * @version: : 1.0
+ */
 public class MySystemInfo {
     private static final String TAG = DDASocket.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);

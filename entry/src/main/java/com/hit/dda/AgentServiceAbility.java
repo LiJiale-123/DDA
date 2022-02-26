@@ -19,25 +19,42 @@ import ohos.rpc.RemoteException;
 import static com.hit.dda.slice.MainAbilitySlice.HANDLE_NAME;
 
 /**
- * DDA服务后台serviceAbility,负责持续监听socket,与DDJ进行通信
+ * @ClassName : Test
+ * @Description :
+ * AgentServiceAbility，DDA应用安装打开后自动开启的服务
+ *  1、负责持续监听socket,与DDJ进行通信
+ *  2、发送通知显示服务正在运行，显示正在监听的端口号
+ * @Author : dda
+ * @Date : Created in 2022/2/26 13:09
+ * @Version: : 1.0
  */
+
 public class AgentServiceAbility extends Ability {
-    //按钮状态，PLAY_STATE表示AgentService已启动；STOP_STATE表示AgentService已关闭
+    /**
+     * 服务状态，PLAY_STATE表示AgentService已启动
+     */
     public static final int PLAY_STATE = 0;
+    /**
+     * 服务状态，PLAY_STATE表示AgentService已关闭
+     */
     public static final int STOP_STATE = 1;
 
     private static final String TAG = AgentServiceAbility.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
-
     //NotificationSlot的ID-使用前台Service，始终保持正在运行的图标在系统状态栏显示。
     private static final int NOTIFICATION_ID = 1005;
     //监听端口默认7000
     private static final int SOCKET_PORT = 7000;
     //当前AgentServiceAbility的状态
     private int state = STOP_STATE;
-
     private DDASocket ddaSocket;
 
+    /**
+     * 重写父类的onStart
+     * ServiceAbility启动时调用的start方法
+     * 启动时开启新线程去监听socket；设置服务状态为已启动；
+     * 发送通知，发送服务状态改变事件；
+     */
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
@@ -51,7 +68,9 @@ public class AgentServiceAbility extends Ability {
         sendEvent();
     }
 
-
+    /**
+     * 重写父类的onCommand
+     */
     @Override
     public void onCommand(Intent intent, boolean restart, int startId) {
         super.onCommand(intent, restart, startId);
@@ -61,12 +80,20 @@ public class AgentServiceAbility extends Ability {
         sendEvent();
     }
 
+    /**
+     * 重写父类的onBackground
+     */
     @Override
     public void onBackground() {
         super.onBackground();
         HiLog.info(LABEL_LOG, "AgentServiceAbility::onBackground");
     }
 
+    /**
+     * 重写父类的onStop
+     * ServiceAbility停止时调用的方法
+     * 取消通知，发送服务状态改变事件；
+     */
     @Override
     public void onStop()
     {
@@ -75,12 +102,22 @@ public class AgentServiceAbility extends Ability {
         cancelNotification();
         sendEvent();
     }
+
+    /**
+     * 重写父类的onConnect
+     * 有ability连接到ServiceAbility时调用，返回AgentServiceAbility的LocalRemoteObject
+     * 取消通知，发送服务状态改变事件；
+     */
     @Override
     public IRemoteObject onConnect(Intent intent) {
         HiLog.info(LABEL_LOG, "AgentServiceAbility::onConnect  应用连接到AgentService");
         return new DDARemoteObject(this);
     }
 
+    /**
+     * 重写父类的onDisconnect
+     * 有ability与ServiceAbility断开连接时调用
+     */
     @Override
     public void onDisconnect(Intent intent) {
         HiLog.info(LABEL_LOG, "AgentServiceAbility::onDisconnect");
@@ -149,6 +186,7 @@ public class AgentServiceAbility extends Ability {
 
     /**
      * Start DDA
+     * AgentServiceAbility的回调，调用该方法启动DDA
      */
     public void startAgent() {
         if (state != STOP_STATE) {
@@ -172,6 +210,10 @@ public class AgentServiceAbility extends Ability {
         //todo
     }
 
+    /**
+     * Stop DDA
+     * AgentServiceAbility的回调，调用该方法停止DDA
+     */
     public void stopAgent() {
         if (state == STOP_STATE) {
             return;
@@ -194,6 +236,7 @@ public class AgentServiceAbility extends Ability {
 
     /**
      * LocalRemoteObject Implementation
+     *  AgentServiceAbility的回调
      */
     public static class DDARemoteObject extends LocalRemoteObject {
         private final AgentServiceAbility agentService;
@@ -202,14 +245,26 @@ public class AgentServiceAbility extends Ability {
             this.agentService = agentService;
         }
 
+        /**
+         * Start DDA
+         * AgentServiceAbility的回调，调用该方法启动DDA
+         */
         public void start() {
             agentService.startAgent();
         }
 
+        /**
+         * AgentServiceAbility的回调，调用该方法获取取每个连接的socket，和该socket发送的命令
+         * @return String 返回每个连接的socket，和该socket发送的命令
+         */
         public String getMap(){
             return agentService.getMap();
         }
 
+        /**
+         * Stop DDA
+         * AgentServiceAbility的回调，调用该方法停止DDA
+         */
         public void stop() {
             agentService.stopAgent();
         }
