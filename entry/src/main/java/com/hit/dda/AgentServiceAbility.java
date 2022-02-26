@@ -18,6 +18,9 @@ import ohos.rpc.RemoteException;
 
 import static com.hit.dda.slice.MainAbilitySlice.HANDLE_NAME;
 
+/**
+ * DDA服务后台serviceAbility,负责持续监听socket,与DDJ进行通信
+ */
 public class AgentServiceAbility extends Ability {
     //按钮状态，PLAY_STATE表示AgentService已启动；STOP_STATE表示AgentService已关闭
     public static final int PLAY_STATE = 0;
