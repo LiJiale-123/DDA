@@ -1,6 +1,5 @@
 package com.hit.dda;
 
-import DDI.DDIS;
 import com.hit.dda.utils.DDASocket;
 import ohos.aafwk.ability.Ability;
 import ohos.aafwk.ability.LocalRemoteObject;
@@ -18,19 +17,21 @@ import ohos.hiviewdfx.HiLogLabel;
 import ohos.rpc.RemoteException;
 
 public class AgentServiceAbility extends Ability {
-
+    //按钮状态，PLAY_STATE表示AgentService已启动；STOP_STATE表示AgentService已关闭
     public static final int PLAY_STATE = 0;
-
     public static final int STOP_STATE = 1;
+    private static final String HANDLE_NAME = "com.hit.dda";
 
     private static final String TAG = AgentServiceAbility.class.getSimpleName();
-
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
 
+    //NotificationSlot的ID-使用前台Service，始终保持正在运行的图标在系统状态栏显示。
     private static final int NOTIFICATION_ID = 1005;
-
+    //监听端口默认7000
     private static final int SOCKET_PORT = 7000;
+    //当前AgentServiceAbility的状态
     private int state = STOP_STATE;
+
     private DDASocket ddaSocket;
 
     @Override
@@ -38,9 +39,9 @@ public class AgentServiceAbility extends Ability {
         super.onStart(intent);
         HiLog.info(LABEL_LOG, "AgentServiceAbility::onStart");
         new Thread(() -> {
+            state = PLAY_STATE;
             ddaSocket = new DDASocket(SOCKET_PORT,this);
             ddaSocket.startSocket();
-            state = PLAY_STATE;
         }).start();
         sendNotification(Integer.toString(SOCKET_PORT));
         sendEvent();
@@ -53,14 +54,6 @@ public class AgentServiceAbility extends Ability {
 
         HiLog.info(LABEL_LOG, "ability连接到AgentService");
         state = PLAY_STATE;
-//        if(ddaSocket!=null){
-//            ddaSocket.startSocket();
-//            state = PLAY_STATE;
-//        }else{
-//            ddaSocket = new DDASocket(SOCKET_PORT);
-//            ddaSocket.startSocket();
-//            state = PLAY_STATE;
-//        }
         sendEvent();
     }
 
@@ -80,8 +73,7 @@ public class AgentServiceAbility extends Ability {
     }
     @Override
     public IRemoteObject onConnect(Intent intent) {
-        HiLog.info(LABEL_LOG, "AgentServiceAbility::onConnect");
-        HiLog.info(LABEL_LOG, "应用连接到AgentService");
+        HiLog.info(LABEL_LOG, "AgentServiceAbility::onConnect  应用连接到AgentService");
         return new DDARemoteObject(this);
     }
 
@@ -91,12 +83,15 @@ public class AgentServiceAbility extends Ability {
         super.onDisconnect(intent);
     }
 
+    /**
+     * 发送事件调整start按钮状态
+     */
     private void sendEvent() {
         HiLog.info(LABEL_LOG, "sendEvent::onStart");
         try {
             Intent intent = new Intent();
             Operation operation = new Intent.OperationBuilder()
-                    .withAction("com.hit.dda")
+                    .withAction(HANDLE_NAME)
                     .build();
             intent.setOperation(operation);
             HiLog.info(LABEL_LOG, "sendEvent:"+state);
@@ -108,6 +103,10 @@ public class AgentServiceAbility extends Ability {
         }
     }
 
+    /**
+     * 发送通知提示socket在持续监听
+     * @param str socket监听端口
+     */
     private void sendNotification(String str) {
         HiLog.info(LABEL_LOG, "sendNotification");
         String slotId = "foregroundServiceId";
@@ -137,9 +136,13 @@ public class AgentServiceAbility extends Ability {
         keepBackgroundRunning(NOTIFICATION_ID, request);
     }
 
+    /**
+     * 取消监听的通知
+     */
     private void cancelNotification() {
         cancelBackgroundRunning();
     }
+
     /**
      * Start DDA
      */
@@ -147,14 +150,11 @@ public class AgentServiceAbility extends Ability {
         if (state != STOP_STATE) {
             return;
         }
-        //DDIS.DDEnvSet(this.get);
         HiLog.info(LABEL_LOG, "开启startAgent");
         new Thread(() -> {
             DDASocket ddaSocket = new DDASocket(SOCKET_PORT,getContext());
             ddaSocket.startSocket();
         }).start();
-//        ddaSocket = new DDASocket(SOCKET_PORT);
-//        ddaSocket.startSocket();
         state = PLAY_STATE;
         sendNotification(Integer.toString(SOCKET_PORT));
         sendEvent();
@@ -180,13 +180,16 @@ public class AgentServiceAbility extends Ability {
         sendEvent();
     }
 
+    /**
+     * 获取取每个连接的socket，和该socket发送的命令
+     * @return String 返回每个连接的socket，和该socket发送的命令
+     */
     public String getMap(){
         return ddaSocket.getMap();
     }
 
     /**
      * LocalRemoteObject Implementation
-     * 6
      */
     public static class DDARemoteObject extends LocalRemoteObject {
         private final AgentServiceAbility agentService;

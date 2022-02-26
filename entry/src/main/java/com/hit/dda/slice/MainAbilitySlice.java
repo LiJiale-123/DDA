@@ -31,8 +31,12 @@ public class MainAbilitySlice extends AbilitySlice {
     private AgentServiceAbility.DDARemoteObject ddaRemoteObject;
     private MyCommonEventSubscriber subscriber;
 
+    //DDA包名HANDLE_NAME
+    public static final String HANDLE_NAME = "com.hit.dda";
+    //serviceAbility全名
+    private static final String SERVICE_ABILITY = "com.hit.dda.AgentServiceAbility";
+
     private Button startAgent;
-    //private Button stopAgent;
     private Button getInfo;
     private Text clientText;
     private Text serverText;
@@ -62,23 +66,15 @@ public class MainAbilitySlice extends AbilitySlice {
         initComponents();
         initSubscribeEvent();
         DDIS.DDEnvSet(getAbility());
-        //getAbility().getContext();
         startAgentService();
     }
 
     private void initComponents(){
         startAgent = (Button)findComponentById(ResourceTable.Id_start_button);
-        //stopAgent = (Button)findComponentById(ResourceTable.Id_stop_button);
         getInfo = (Button)findComponentById(ResourceTable.Id_connect_button);
         serverText = (Text)findComponentById(ResourceTable.Id_server_text);
         clientText = (Text)findComponentById(ResourceTable.Id_client_text);
-        startAgent.setClickedListener(component ->{
-            ddaRemoteObject.start();
-        });
-//        stopAgent.setClickedListener(component ->{
-//            ddaRemoteObject.stop();
-//
-//        });
+        startAgent.setClickedListener(component -> ddaRemoteObject.start());
         getInfo.setClickedListener(component -> {
             serverText.setText("Current device IP:" + System.lineSeparator() + getLocationIpAddress());
             clientText.setText("Current socket port:"+ddaRemoteObject.getMap());
@@ -87,7 +83,7 @@ public class MainAbilitySlice extends AbilitySlice {
 
     private void initSubscribeEvent() {
         MatchingSkills matchingSkills = new MatchingSkills();
-        matchingSkills.addEvent("com.hit.dda");
+        matchingSkills.addEvent(HANDLE_NAME);
         CommonEventSubscribeInfo subscribeInfo = new CommonEventSubscribeInfo(matchingSkills);
         subscriber = new MyCommonEventSubscriber(subscribeInfo);
         try {
@@ -103,8 +99,8 @@ public class MainAbilitySlice extends AbilitySlice {
         Intent intent = new Intent();
         Operation operation = new Intent.OperationBuilder()
                 .withDeviceId("")
-                .withBundleName("com.hit.dda")
-                .withAbilityName("com.hit.dda.AgentServiceAbility")
+                .withBundleName(HANDLE_NAME)
+                .withAbilityName(SERVICE_ABILITY)
                 .build();
         intent.setOperation(operation);
         startAbility(intent);
@@ -141,17 +137,19 @@ public class MainAbilitySlice extends AbilitySlice {
         disconnectAbility(connection);
     }
 
+    /**
+     * 设置start按钮状态
+     * @param state DDA当前状态
+     */
     private void setState(int state) {
         switch (state) {
             case PLAY_STATE: {
                 handleButtonState(PLAY_STATE);
                 startAgent.setText(ResourceTable.String_start_over);
-                //stopAgent.setText(ResourceTable.String_stop);
                 break;
             }
             case STOP_STATE: {
                 handleButtonState(STOP_STATE);
-                //stopAgent.setText(ResourceTable.String_stop_over);
                 startAgent.setText(ResourceTable.String_start);
                 break;
             }
@@ -160,14 +158,12 @@ public class MainAbilitySlice extends AbilitySlice {
         lastState = state;
     }
 
+    /**
+     * 改变按钮当前格式，DDA服务开启与关闭状态选择不同的按钮格式
+     * @param status  DDA当前状态
+     */
     private void handleButtonState(int status) {
-        if ( status != STOP_STATE) {
-            startAgent.setEnabled(false);
-            //stopAgent.setEnabled(true);
-        } else {
-            startAgent.setEnabled(true);
-            //stopAgent.setEnabled(false);
-        }
+        startAgent.setEnabled(status == STOP_STATE);
     }
 
 
