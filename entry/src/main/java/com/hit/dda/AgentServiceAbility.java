@@ -16,6 +16,8 @@ import ohos.aafwk.ability.LocalRemoteObject;
 import ohos.aafwk.content.Intent;
 import ohos.aafwk.content.Operation;
 import ohos.agp.utils.Color;
+import ohos.app.Context;
+import ohos.bundle.ApplicationInfo;
 import ohos.event.commonevent.CommonEventData;
 import ohos.event.commonevent.CommonEventManager;
 import ohos.event.notification.NotificationHelper;

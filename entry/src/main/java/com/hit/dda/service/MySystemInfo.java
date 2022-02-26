@@ -26,7 +26,7 @@ import java.util.List;
  * @version: : 1.0
  */
 public class MySystemInfo {
-    private static final String TAG = DDASocket.class.getSimpleName();
+    private static final String TAG = MySystemInfo.class.getSimpleName();
     private static final HiLogLabel LABEL_LOG = new HiLogLabel(3, 0xD001100,TAG);
 
     private final Context context;
@@ -42,8 +42,6 @@ public class MySystemInfo {
         this.systemMemoryInfo = new SystemMemoryInfo();
         iAbilityManager.getSystemMemoryInfo(systemMemoryInfo);
     }
-
-
     //获取系统总内存
     public String getSystemTotalMem(){
         String result = transferSize(systemMemoryInfo.getTotalSysMem());
